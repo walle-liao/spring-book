@@ -1,0 +1,10 @@
+# spring 基于注解事务详解
+
+
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#populateBean
+
+将普通对象转换成代理对象的地方
+org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsAfterInitialization
+org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#postProcessAfterInitialization
+org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#wrapIfNecessary
