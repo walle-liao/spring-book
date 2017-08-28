@@ -28,7 +28,7 @@ ApplicationListener<ApplicationEvent>,BeanPostProcessor,InitializingBean {}
 -> `AbstractAutoProxyCreator#postProcessAfterInitialization`   
 -> `AbstractAutoProxyCreator#wrapIfNecessary` 这个方法可以用来返回一个代理对象，用来替换原 service 对象
 
-而用于生成 service 事务代理对象的 `BeanPostProcessor` 需要在 `Collector` 类被实例化之后才会被实例化，但是由于 spring 的单例模式，service 对象一但被创建出来后，下次在其他类中再被引用时，会直接获取已经创建的对象实例（那些在 `Collector` 实例被创建时，被关联创建出来的 service 都是没有代理的，特别是被 `SystemUserInfo` 关联的 `PersonService`，以及被 `PersonService` 关联的，以及后续传递的关联的所有的对象都不会被代理），这也就是为什么注释掉 `BaseServiceImpl` 中 `SystemUserInfo` 的 `@Autowired` 事务就会正常起作用的原因，而且即使不注释掉 `BaseServiceImpl` 中 `SystemUserInfo` 的 `@Autowired` 也不是所有的 service 的事务都会失效，而是被 `PersonService` 关联，以及关联对象所关联的 service 不会有事务 *（如果你新创建一个 service 在系统的其他地方都没有被引用，去测试其事务特性，一样可以正常工作）*，
+而用于生成 service 事务代理对象的 `BeanPostProcessor` 需要在 `Collector` 类被实例化之后才会被实例化，但是由于 spring 的单例模式，service 对象一但被创建出来后，下次在其他类中再被引用时，会直接获取已经创建的对象实例（那些在 `Collector` 实例被创建时，被关联创建出来的 service 都是没有代理的，特别是被 `SystemUserInfo` 关联的 `PersonService`，以及被 `PersonService` 关联的，以及后续传递的关联的所有的对象都不会被代理），这也就是为什么注释掉 `BaseServiceImpl` 中 `SystemUserInfo` 的 `@Autowired` 事务就会正常起作用的原因，而且即使不注释掉 `BaseServiceImpl` 中 `SystemUserInfo` 的 `@Autowired` 也不是所有的 service 的事务都会失效，而是被 `PersonService` 关联，以及关联对象所关联的 service 不会有事务 *（如果你新创建一个 service 在系统的其他地方都没有被引用，去测试其事务特性，一样可以正常工作）*
 
 **原因总结：**
 `com.qfang.service.center.entry.collect.Collector` 类是一个 `BeanPostProcessor`，而在 `Collector` 中又注入了系统中的类（com.qfang），有用实例化依赖对象的传递关系时，导致很多系统中的类被过早地实例化，而没有被正确地创建事务代理对象，然后因为 spring 单例的缘故，实例化之后不会再次实例化，所以导致很多 service 对象的事务代理对象没有正常生成。
@@ -118,5 +118,5 @@ beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationCont
 
 
 > 关于 spring 容器启动过程代码分析，参考：[spring 容器启动过程](../ch1-ioc/spring容器启动过程.md)  
-> 关于 tx:annotation-driven 标签的解析，参考：[spring 自定义标签介绍](../ch1-ioc/spring自定义标签介绍.md)]
+> 关于 tx:annotation-driven 标签的解析，参考：[spring 自定义标签介绍](../ch1-ioc/spring自定义标签介绍.md)]  
 > 关于 spring 中基于注解事务的详细原理参考：[spring 基于注解事务详见](../ch2-aop\spring基于注解事务.md)
