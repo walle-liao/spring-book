@@ -8,6 +8,7 @@
     - [bean 实例化介绍](./ch1-ioc/bean实例化介绍.md)
     - [Resource 注解处理](./ch1-ioc/Resource注解处理.md)
     - [Autowire 注解处理](./ch1-ioc/Autowire注解处理.md)
+    - [spring 自定义标签介绍](./ch1-ioc/spring自定义标签介绍.md)
 
 - [aop 介绍](./ch2-aop/README.md)  
   - [aop 相关概念介绍](./ch2-aop/aop相关概念介绍.md)
