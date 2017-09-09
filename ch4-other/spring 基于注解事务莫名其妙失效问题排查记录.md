@@ -118,5 +118,5 @@ beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationCont
 
 
 > 关于 spring 容器启动过程代码分析，参考：[spring 容器启动过程](../ch1-ioc/spring容器启动过程.md)  
-> 关于 tx:annotation-driven 标签的解析，参考：[spring 自定义标签介绍](../ch1-ioc/spring自定义标签介绍.md)]  
+> 关于 tx:annotation-driven 标签的解析，参考：[spring 自定义标签介绍](../ch1-ioc/spring自定义标签介绍.md)  
 > 关于 spring 中基于注解事务的详细原理参考：[spring 基于注解事务详见](../ch2-aop\spring基于注解事务.md)
