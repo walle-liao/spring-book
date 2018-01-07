@@ -1,0 +1,100 @@
+@startuml
+
+ClassPathXmlApplicationContext -> ClassPathXmlApplicationContext : setParent
+ClassPathXmlApplicationContext -> ConfigurableEnvironment : merge
+note left: \"合并环境变量\"
+ClassPathXmlApplicationContext -> ClassPathXmlApplicationContext : setConfigLocations
+
+ClassPathXmlApplicationContext -> ClassPathXmlApplicationContext : resolvePath
+ClassPathXmlApplicationContext -> ConfigurableEnvironment : resolveRequiredPlaceholders
+note left: \"Resolve ${...} placeholders in the given text\"
+
+== refresh ==
+
+ClassPathXmlApplicationContext -> AbstractApplicationContext : refresh
+AbstractApplicationContext -> AbstractApplicationContext : prepareRefresh
+note right: \" 1.initPropertySources(); \n 2. validateRequiredProperties \"
+
+AbstractApplicationContext -> AbstractApplicationContext : obtainFreshBeanFactory
+
+
+@enduml
+
+org.springframework.context.support.AbstractRefreshableApplicationContext#refreshBeanFactory
+
+org.springframework.context.support.AbstractRefreshableApplicationContext#hasBeanFactory
+  destroyBeans
+  closeBeanFactory
+
+DefaultListableBeanFactory beanFactory = createBeanFactory();
+  new DefaultListableBeanFactory(getInternalParentBeanFactory());
+
+  customizeBeanFactory(beanFactory);
+    // allowBeanDefinitionOverriding  allowCircularReferences 是否允许循环依赖
+    beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
+    beanFactory.setAllowCircularReferences(this.allowCircularReferences);
+
+  loadBeanDefinitions(beanFactory);
+    XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+      beanDefinitionReader.resourceLoader == ApplicationContext
+      beanDefinitionReader.entityResolver = new ResourceEntityResolver(ApplicationContext)
+      ResourceEntityResolver.resourceLoader == ApplicationContext
+
+    AbstractXmlApplicationContext#loadBeanDefinitions(org.springframework.beans.factory.xml.XmlBeanDefinitionReader)
+      String[] configLocations = getConfigLocations(); // [ classpath:d01/applicationContext.xml ]
+      beanDefinitionReader.loadBeanDefinitions(configLocations);
+
+      // --- org.springframework.beans.factory.xml.XmlBeanDefinitionReade
+      AbstractBeanDefinitionReader#loadBeanDefinitions(java.lang.String, java.util.Set<org.springframework.core.io.Resource>)
+      ResourceLoader resourceLoader = getResourceLoader();  // resourceLoader == ApplicationContext
+      Resource[] resources = ResourcePatternResolver.getResources(location)
+      int loadCount = loadBeanDefinitions(resources);
+      loadBeanDefinitions(Resource resource)
+      loadBeanDefinitions(EncodedResource encodedResource)  // EncodedResource 指定编码格式的 Resource
+        InputStream inputStream = encodedResource.getResource().getInputStream();
+        InputSource inputSource = new InputSource(inputStream);
+        inputSource.setEncoding(encodedResource.getEncoding());
+        doLoadBeanDefinitions(InputSource inputSource, Resource resource)
+          Document doc = doLoadDocument(inputSource, resource)
+          registerBeanDefinitions(Document doc, Resource resource)
+            BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+            // -- org.springframework.beans.factory.xml.BeanDefinitionDocumentReader [DefaultBeanDefinitionDocumentReader]
+              registerBeanDefinitions(Document doc, XmlReaderContext readerContext)
+                doRegisterBeanDefinitions(Element root)
+                  preProcessXml(root);  // 空方法
+                  parseBeanDefinitions(root, this.delegate);
+                  postProcessXml(root); // 空方法
+
+                  // parseBeanDefinitions
+                  Element typeof import alias bean beans
+                  importBeanDefinitionResource
+                    // 解析 <import resource="" /> 解析 resource 路径地址，继续加载对应的 xml
+                    getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
+                  processAliasRegistration
+                    // alias
+                  processBeanDefinition
+                    // <bean >
+                    processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate)
+                    BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
+
+                    // -- org.springframework.beans.factory.xml.BeanDefinitionParserDelegate#parseBeanDefinitionElement(org.w3c.dom.Element)
+                    parseBeanDefinitionElement(Element ele, BeanDefinition containingBean)
+
+                    *** AbstractBeanDefinition parseBeanDefinitionElement ***
+                      #parseBeanDefinitionAttributes // scope, lazy, init-method
+                      parseMetaElements(ele, bd);
+                      parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+                      parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
+
+                      parseConstructorArgElements(ele, bd);
+                      parsePropertyElements(ele, bd);
+                        parsePropertyElement
+                          parsePropertyValue  // ref  value (ref&value 只能配置一个)
+                            if ref
+                              RuntimeBeanReference ref = new RuntimeBeanReference(refName);
+                            else value
+                              TypedStringValue valueHolder = new TypedStringValue(ele.getAttribute(VALUE_ATTRIBUTE));
+                            else subElement // <bean id="" class=""> <property name=""><bean class=""/></property> </bean>
+                              BeanDefinitionHolder nestedBd = parseBeanDefinitionElement(ele, bd);
+                          
+                      parseQualifierElements(ele, bd);
