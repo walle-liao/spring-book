@@ -17,8 +17,14 @@ public ClassPathXmlApplicationContext(String[] configLocations, boolean refresh,
 
 ```
 
-其中容器启动的关键逻辑都在这个 `#refresh()` 方法中，我们来查看下该 `#refresh()` 方法的源代码
+其中容器启动的关键逻辑都在这个 `#refresh()` 方法中，该方法主要完成的逻辑：
+- 加载 BeanDefinition
+- 执行 BeanFactoryPostProcessor & BeanPostProcessor
+- 初始化事件
+- 初始化所有非 lazy 的单例 bean
 
+
+下面是该方法的源代码
 ``` java
 @Override
 public void refresh() throws BeansException, IllegalStateException {
