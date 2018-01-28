@@ -11,7 +11,7 @@
   - isSingleton()  new ObjectFactory() {createBean(beanName, mbd, args);}  // singleton bean 实例创建
   - isPrototype()  createBean(beanName, mbd, args);  // prototype bean 创建
   - customer scope
-- org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#getSingleton  // singletonObject = singletonFactory.getObject();
+- org.springframework.beans.factory.support.DefaultSingletonBeanRegistry#getSingleton  // singletonObject = singletonFactory.getObject();  内部匿名类 new ObjectFactory
 - org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean
   - Object bean = resolveBeforeInstantiation(beanName, mbdToUse);  // BeanPostProcessors 可以在这里返回代理对象
   - *Object beanInstance = doCreateBean(beanName, mbdToUse, args);  // 正常情况下*
