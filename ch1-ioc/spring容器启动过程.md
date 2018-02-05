@@ -32,17 +32,19 @@ public void refresh() throws BeansException, IllegalStateException {
         // 初始化系统 placeholder，校验必须要设置的 Property 是否已经设置
 		prepareRefresh();
 
-		// 创建 BeanFactory，并且加载 BeanDefinition
+		// 创建 BeanFactory
+    // 完成所有 BeanDefinition 的加载
 		ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 		// 设置 classloader, 注册 ApplicationContextAwareProcessor 等
 		prepareBeanFactory(beanFactory);
 
 		try {
-			// 预留的扩展接口
+			// AbstractRefreshableWebApplicationContext 实现类在这里注册 (request, session, global session, application) scope 实现
 			postProcessBeanFactory(beanFactory);
 
-			// 执行所有的 BeanFactoryPostProcessor 接口，用于修改 BeanDefinition 的一些信息
+			// 实例化并且初始化所有 BeanDefinitionRegistryPostProcessor 接口的实现类 （按照 PriorityOrdered, Ordered, and none order 顺序调用）
+      // 实例化并且初始化所有 BeanFactoryPostProcessor 接口的实现类（按照 PriorityOrdered, Ordered, and none order 顺序调用）
 			invokeBeanFactoryPostProcessors(beanFactory);
 
 			// 注册所有的 BeanPostProcessor
