@@ -157,6 +157,7 @@ public class ScopeNamespaceHandler extends NamespaceHandlerSupport {
 ```
 
 **4、实现 BeanDefinitionParser 接口**  
+PS: 简单点也可以通过继承 `AbstractSingleBeanDefinitionParser` 类来实现
 ``` java
 class ScopeThreadBeanDefinitionParser implements BeanDefinitionParser {
 
