@@ -3,6 +3,11 @@
 
 ### 相关接口
 
+![BeanPostProcessor 主要实现类](./images/000012.png)
+
+![spring bean 实例化过程](./images/000016.png)
+
+
 #### BeanPostProcessor
 接口定义如下：
 ``` java
@@ -11,7 +16,6 @@ Object postProcessBeforeInitialization(Object bean, String beanName) throws Bean
 
 // 实例化、依赖注入完成，初始化之后被调用
 Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException;
-
 ```
 
 接口方法被调用的入口：  

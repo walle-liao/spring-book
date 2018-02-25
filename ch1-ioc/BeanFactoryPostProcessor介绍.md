@@ -104,7 +104,7 @@ public class MyExtPropertyPlaceholderConfigurer extends PropertyPlaceholderConfi
 }
 ```
 
-2.2、`#processProperties` 方法详见
+2.2、`#processProperties` 方法
 
 org.springframework.beans.factory.config.PropertyPlaceholderConfigurer#processProperties
 
