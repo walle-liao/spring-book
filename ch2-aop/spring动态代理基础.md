@@ -175,8 +175,6 @@ http://blog.csdn.net/luanlouis/article/details/24589193
 public class MyGenerator {
 
     public static void main(String[] args) throws IOException {
-
-        System.out.println();
         ClassWriter classWriter = new ClassWriter(0);
         // 通过visit方法确定类的头部信息
         classWriter.visit(Opcodes.V1_8,// java版本
