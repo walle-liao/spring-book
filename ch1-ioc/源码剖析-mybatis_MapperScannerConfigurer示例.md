@@ -1,4 +1,4 @@
-#  mybatis MapperScannerConfigurer 示例
+# mybatis MapperScannerConfigurer 示例
 
 使用过 mybatis 的人应该都知道，mybatis 有个特性就是对于 Mapper 类，只需要声明接口就可以了，而不需要写具体的实现类，上层在使用 Mapper 接口时只需要直接注入 Mapper 接口就可以正常工作，下面我们就来具体剖析下 mybatis 是怎样通过这个 Mapper 接口来自动生成 Mapper 实现类，并且注册到 spring 容器中。
 
