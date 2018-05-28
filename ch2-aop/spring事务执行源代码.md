@@ -89,7 +89,7 @@ public final TransactionStatus getTransaction(TransactionDefinition definition) 
             boolean newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);
             DefaultTransactionStatus status = newTransactionStatus(
                     definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
-            // 子类 DataSourceTransactionManager#doBegin，根据配置的 dataSource，获取 connection，并且设置 con.setAutoCommit(false);
+            // 子类中实现，DataSourceTransactionManager#doBegin，根据配置的 dataSource，获取 connection，并且设置 con.setAutoCommit(false);
             doBegin(transaction, definition);
             prepareSynchronization(status, definition);
             return status;
