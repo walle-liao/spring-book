@@ -249,7 +249,7 @@ protected T newInstance(MapperProxy<T> mapperProxy) {
 ```
 到这里就已经非常明确了，mybatis 通过 jdk 的动态代理方式来为所有的 mapper 接口生成一个代理实现类。
 
-顺便我们来看下 `org.apache.ibatis.binding.#invoke` 方法
+顺便我们来看下 `org.apache.ibatis.binding.MapperProxy#invoke` 方法
 ``` java
 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
   try {
